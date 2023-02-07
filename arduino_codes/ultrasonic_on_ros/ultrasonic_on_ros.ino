@@ -20,15 +20,26 @@ float distanceCm;
 ros::NodeHandle  nh;
 std_msgs::Float32 ultra_to_ros;
 sensor_msgs::Range range_msgs;
+
 ros::Publisher ultrasonic_pub("ultrasonic_pub",&range_msgs); 
+char frameid[] ="/sonar_ranger";
+
 void setup() {
 
   // Ultrasonic setup 
   
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
   pinMode(echoPin, INPUT); // Sets the echoPin as an Input
+
+// ROS setup
   nh.initNode();
   nh.advertise(ultrasonic_pub);
+
+range_msgs.field_of_view = (10.0 / 180.0)*3.14;
+range_msgs.min_range = 0.0;
+range_msgs.max_range = 100.0;
+range_msgs.radiation_type = sensor_msgs::Range::ULTRASOUND;
+range_msgs.header.frame_id = frameid;
 }
 
 void loop() {
